@@ -1,0 +1,40 @@
+<!DOCTYPEhtml>
+<html>
+    <head>
+        <title>Lunch</title>
+
+    </head>
+    <body>
+        <h1>Dagens Lunch</h1>
+        <button>Random</button>
+        <h3></h3>
+    </body>
+    <script>
+        let btn = document.querySelector('button');
+        let result = document.querySelector('h3');
+
+        let alt = [
+            'Äran',
+            'Kebab',
+            'Korv',
+            'Indiskt',
+            'Pizza',
+            'Thai',
+            'Siencepark',
+            'Ericsson'
+        ];
+
+        function getLunch(alt){
+            let lenght = alt.length;
+            let result = Math.floor(Math.random() * (lenght - 0)) + 0;
+            //return alt[result];
+            console.log(result);
+            return console.log(alt[result]);
+        }
+
+        btn.addEventListener('click', event => {
+            getLunch(alt);
+        });
+
+    </script>
+</html>
