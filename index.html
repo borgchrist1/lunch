@@ -4,27 +4,78 @@
     <title>Lunch</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
     <style>
-        .top-buffer {
-            margin-top: 15px;
-        }
+    .top-buffer {
+        margin-top: 15px;
+    }
+    .padding {
+        padding-right: 20px;
+    }
+    .display-none {
+        display: none;
+    }
+    .display {
+        display: block;
+    }
     </style>
 </head>
 <body>
     <div class="container top-buffer">
-        <div class="col-md-12">
-            <div class="form-group">
-                <input class="checkbox" type="checkbox" name="" value="">
-                <input class="checkbox" type="checkbox" name="" value="">
-                <input class="checkbox" type="checkbox" name="" value="">
-                <input class="checkbox" type="checkbox" name="" value="">
-                <input class="checkbox" type="checkbox" name="" value="">
-                <input class="checkbox" type="checkbox" name="" value="">
-                <input class="checkbox" type="checkbox" name="" value="">
-            </div>
-            <div class="form-group">
+        <div class="row">
+            <div class="col-md-12">
                 <h1>Dagens Lunch</h1>
-                <button class="btn btn-info">Random</button>
-                <h3></h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-inline top-buffer">
+                    <div class="form-controll padding">
+                        Select all
+                        <input class="checkbox all" type="checkbox" value="Select all">
+                    </div>
+                    <div class="form-controll padding">
+                        Äran
+                        <input class="checkbox checkboxes" type="checkbox" checked value="Äran">
+                    </div>
+                    <div class="form-controll padding">
+                        Kebab
+                        <input class="checkbox checkboxes" type="checkbox" checked value="Kebab">
+                    </div>
+                    <div class="form-controll padding">
+                        Korv
+                        <input class="checkbox checkboxes" type="checkbox" checked value="Korv">
+                    </div>
+                    <div class="form-controll padding">
+                        Indiskt
+                        <input class="checkbox checkboxes" type="checkbox"checked value="Indiskt">
+                    </div>
+                    <div class="form-controll padding">
+                        Pizza
+                        <input class="checkbox checkboxes" type="checkbox" checked value="Pizza">
+                    </div>
+                    <div class="form-controll padding">
+                        Thai
+                        <input class="checkbox checkboxes" type="checkbox" checked value="Thai">
+                    </div>
+                    <div class="form-controll padding">
+                        Siencepark
+                        <input class="checkbox checkboxes" type="checkbox" checked value="Siencepark">
+                    </div>
+                    <div class="form-controll padding">
+                        Ericsson
+                        <input class="checkbox checkboxes" type="checkbox" checked value="Ericsson">
+                    </div>
+                    <div class="form-controll padding">
+                        E.A.T.
+                        <input class="checkbox checkboxes" type="checkbox" value="E.A.T.">
+                    </div>
+                </div>
+                <div class="form-group top-buffer">
+                    <button class="btn btn-info random-lunch display">Get lunch?</button>
+                    <button class="btn btn-danger reload-lunch display-none">Reload</button>
+                    <div class="top-buffer">
+                        <h3 class="food"></h3>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -33,31 +84,64 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
 <script>
-let btn = document.querySelector('button');
-let result = document.querySelector('h3');
+const vals = document.querySelectorAll('.checkboxes');
+const btn = document.querySelector('.random-lunch');
+const reload = document.querySelector('.reload-lunch');
+const result = document.querySelector('.food');
+const all = document.querySelector('.all');
+const alt = [];
 
-let alt = [
-    'Äran',
-    'Kebab',
-    'Korv',
-    'Indiskt',
-    'Pizza',
-    'Thai',
-    'Siencepark',
-    'Ericsson'
-];
-
-function getLunch(alt){
-    let lenght = alt.length;
-    let result = Math.floor(Math.random() * (lenght - 0)) + 0;
-    //return alt[result];
-    console.log(result);
-    return console.log(alt[result]);
-}
-
-btn.addEventListener('click', event => {
-    getLunch(alt);
+// check all boxes
+// TODO: Array dose not update when run
+all.addEventListener('change', ()=> {
+    if (all.checked) {
+        vals.forEach((element) => {
+            element.checked = true;
+        });
+    } else {
+        vals.forEach((element) => {
+            element.checked = false;
+        });
+    }
 });
 
+vals.forEach((element) => {
+    // add and removes elements from array
+    element.addEventListener('change', () => {
+        if (element.checked) {
+            alt.push(element.value);
+            console.log(element.value);
+        } else {
+            let index = alt.indexOf(element.value);
+            if (index >= 0) {
+                alt.splice( index, 1 );
+            }
+        }
+    });
+    // adds all checked values to array on page load
+    if (element.checked) {
+        alt.push(element.value);
+    }
+});
+
+// function to randomize lunch
+function getLunch(alt, addToDom){
+    const lenght = alt.length;
+    let result = Math.floor(Math.random() * (lenght - 0)) + 0;
+    btn.remove();
+    reload.classList.remove("display-none");
+    reload.className += " display";
+    return addToDom.innerHTML = alt[result];
+}
+
+// starts getLunch function
+btn.addEventListener('click', event => {
+    getLunch(alt, result);
+});
+
+// starts getLunch function
+reload.addEventListener('click', event => {
+    getLunch(alt, result);
+});
 </script>
 </html>
